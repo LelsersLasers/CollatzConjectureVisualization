@@ -1,21 +1,27 @@
+const SPACER_PERCENT = 0.05;
+let SPACER_PX = 0;
+const SLIDE_START = 20;
 
+let speedTimer = 0;
+
+GraphSize.init();
 
 const canvas = document.getElementsByTagName("canvas")[0];
-canvas.addEventListener("mousemove", function (event) {
-    const rect = canvas.getBoundingClientRect();
+// canvas.addEventListener("mousemove", function (event) {
+//     const rect = canvas.getBoundingClientRect();
 
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+//     const x = event.clientX - rect.left;
+//     const y = event.clientY - rect.top;
 
-    // const pos = new Vector(x / canvas.width, y / canvas.height);
-    // mouseObstacle.pos = pos;
-});
+//     // const pos = new Vector(x / canvas.width, y / canvas.height);
+//     // mouseObstacle.pos = pos;
+// });
 
 const context = canvas.getContext("2d");
 
-let collatzNumbers = [
-    new CollatzNumber(1),
-];
+let collatzNumbers = [new CollatzNumber(1)];
+let allValues = [1];
+let allFinishCounts = [];
 
 
 let paused = false;
@@ -31,6 +37,8 @@ function resize() {
 
         canvas.width = maxWidth;
         canvas.height = maxHeight;
+
+        SPACER_PX = Math.max(canvas.width, canvas.height) * SPACER_PERCENT;
     }
 }
 
@@ -57,29 +65,27 @@ function randomColor() {
 }
   
 
-const MAX_Y = 50;
-const MAX_X = 50;
-const SPACER_PERCENT = 0.02;
-const RANDOM_COLORS = false;
-const SPEED = 30; // 'next' calls per second
-
-let speedTimer = 0;
-
+function valToX(val) {
+    const width = canvas.width - (SPACER_PX * 2);
+    return SPACER_PX + (val / GraphSize.getX() * width);
+}
 function valToY(val) {
     // -1 because the conjecture is that all numbers will eventually reach 1
+    const height = canvas.height - (SPACER_PX * 2);
 
-    const spacer = canvas.height * SPACER_PERCENT;
-    const height = canvas.height - (spacer * 2);
-
-    return canvas.height - (spacer + ((val - 1) / MAX_Y * height));
+    return canvas.height - (SPACER_PX + ((val - 1) / GraphSize.getY() * height));
 }
-function valToX(val) {
-    const spacer = canvas.width * SPACER_PERCENT;
-    const width = canvas.width - (spacer * 2);
 
-    return spacer + (val / MAX_X * width);
+function maxNonOutlier(arr) {
+    arr.sort((a, b) => a - b);
+    const q1 = arr[Math.floor(arr.length / 4)];
+    const q3 = arr[Math.floor(arr.length * 3 / 4)];
+    const iqr = q3 - q1;
+    const upperBound = q3 + (iqr * 1.5);
 
+    return upperBound;
 }
+
 
 function render() {
     context.fillStyle = "#3B4252";
@@ -88,30 +94,59 @@ function render() {
     
     if (!paused) {
         speedTimer += delta;
-        if (speedTimer > 1 / SPEED) {
+        if (speedTimer > 1 / Settings.speed) {
 
-            if (speedTimer > 2 / SPEED) { // likely from switching tabs
+            if (speedTimer > 2 / Settings.speed) {
+                // likely from switching tabs or falling too far behind
                 speedTimer = 0;
             } else {
-                speedTimer -= 1 / SPEED;
+                speedTimer -= 1 / Settings.speed;
             }
 
             const lastNumber = collatzNumbers[collatzNumbers.length - 1];
             if (!lastNumber.finished()) {
-                lastNumber.next();
+                const val = lastNumber.next();
+                allValues.push(val);
             }
             else {
-                collatzNumbers.push(new CollatzNumber(lastNumber.start + 1));
+                const finishCount = lastNumber.history.length;
+                allFinishCounts.push(finishCount);
+
+                if (allFinishCounts.length > 20) {
+                    if (Settings.showAllNumbers) {
+                        const upper = Math.max(...allFinishCounts);
+                        GraphSize.setX(upper);
+                    } else {
+                        const upperBound = maxNonOutlier(allFinishCounts);
+                        GraphSize.setX(upperBound);
+                    }
+                }
+
+                const newNumber = lastNumber.start + 1;
+                collatzNumbers.push(new CollatzNumber(newNumber));
+                allValues.push(newNumber);
+            }
+
+            if (allValues.length > 20) {
+                if (Settings.showAllNumbers) {
+                    const upper = Math.max(...allValues);
+                    GraphSize.setY(upper);
+                } else {
+                    const upperBound = maxNonOutlier(allValues);
+                    GraphSize.setY(upperBound);
+                }
             }
         }
     }
+
+    GraphSize.update(delta);
 
     for (let i = 0; i < collatzNumbers.length; i++) {
         const collatzNumber = collatzNumbers[i];
         const history = collatzNumber.history;
 
         context.beginPath();
-        context.strokeStyle = RANDOM_COLORS ? collatzNumber.color : "#ECEFF4";
+        context.strokeStyle = Settings.randomColors ? collatzNumber.color : "#ECEFF4";
         context.moveTo(valToX(0), valToY(history[0]));
         for (let j = 1; j < history.length; j++) {
             const val = history[j];
@@ -125,13 +160,32 @@ function render() {
         context.stroke();
     }
 
-    // context.strokeStyle = "#EBCB8B";
-    // context.strokeRect(
-    //     canvas.width * SPACER_PERCENT,
-    //     canvas.height * SPACER_PERCENT,
-    //     canvas.width * (1 - SPACER_PERCENT * 2),
-    //     canvas.height * (1 - SPACER_PERCENT * 2)
-    // );
+
+
+    context.strokeStyle = "#EBCB8B";
+    context.beginPath();
+    context.moveTo(SPACER_PX, SPACER_PX);
+    context.lineTo(SPACER_PX, canvas.height - SPACER_PX);
+    context.lineTo(canvas.width - SPACER_PX, canvas.height - SPACER_PX);
+    context.stroke();
+
+    // Draw the axis number labels
+    context.font = (SPACER_PX / 3) + "px serif";
+    context.fillStyle = "#D8DEE9";
+
+    const spacerDif = SPACER_PX * 0.9;
+    
+    // X axis
+    context.textAlign = "right";
+    context.textBaseline = "top";
+
+    context.fillText(GraphSize.getX().toFixed(0), canvas.width - SPACER_PX, canvas.height - spacerDif);
+
+    // Y axis
+    context.textAlign = "right";
+    context.textBaseline = "right";
+
+    context.fillText(GraphSize.getY().toFixed(0), spacerDif, SPACER_PX);
 
 
 
