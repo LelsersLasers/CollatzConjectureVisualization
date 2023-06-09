@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Collatz Conjecture</title>
+
+        <script type="text/javascript" src="settings.js" defer></script>
+        <script type="text/javascript" src="slideEffect.js" defer></script>
+        <script type="text/javascript" src="graphSize.js" defer></script>
+        <script type="text/javascript" src="collatzNumber.js" defer></script>
+        <script type="text/javascript" src="script.js" defer></script>
+
+        <link rel="stylesheet" href="style.css" />
+    </head>
+
+    <body onresize="resize();" onload="resize();">
+        <div id="mainStuff" class="flex-container">
+            <div id="canvasContainer">
+                <canvas id="mainCanvas"></canvas>
+            </div>
+
+            <div id="settings">
+                <span id="fpsText">FPS: 60</span>
+                <br />
+
+                <span id="numbersText">Current Number: 1</span>
+                <br />
+
+                <hr />
+
+                <label for="speed">Calculations per second:</label>
+                <output>50</output>
+                <input
+                    type="range"
+                    id="speed"
+                    name="speed"
+                    min="1"
+                    max="200"
+                    step="1"
+                    value="50"
+                    oninput="this.previousElementSibling.value = this.value"
+                />
+                <br class="spacing" />
+
+                <label for="slideSpeed">Animation Time:</label>
+                <output>1</output>
+                <input
+                    type="range"
+                    id="slideSpeed"
+                    name="slideSpeed"
+                    min="0.1"
+                    max="5.0"
+                    step="0.1"
+                    value="1"
+                    oninput="this.previousElementSibling.value = this.value"
+                />
+                <br class="spacing" />
+
+                <label for="percentOfNumbers"
+                    >Percent of numbers to show:</label
+                >
+                <output>1</output>
+                <input
+                    type="range"
+                    id="percentOfNumbers"
+                    name="percentOfNumbers"
+                    min="0.05"
+                    max="1.0"
+                    step="0.05"
+                    value="1"
+                    oninput="this.previousElementSibling.value = this.value"
+                />
+                <br class="spacing" />
+
+                <label for="randomColors">Random colors:</label>
+                <input type="checkbox" id="randomColors" name="randomColors" />
+                <br class="spacing" />
+
+                <label for="lineWidth">Line widths:</label>
+                <output>1</output>
+                <input
+                    type="range"
+                    id="lineWidth"
+                    name="lineWidth"
+                    min="1"
+                    max="5"
+                    step="1"
+                    value="1"
+                    oninput="this.previousElementSibling.value = this.value"
+                />
+                <br class="spacing" />
+
+                <label for="lineOpacity">Line opacity:</label>
+                <output>1</output>
+                <input
+                    type="range"
+                    id="lineOpacity"
+                    name="lineOpacity"
+                    min="0.01"
+                    max="1"
+                    step="0.01"
+                    value="1"
+                    oninput="this.previousElementSibling.value = this.value"
+                />
+                <br class="spacing" />
+
+                <label for="showDot">Show dot:</label>
+                <input type="checkbox" id="showDot" name="showDot" checked />
+                <br class="spacing" />
+
+                <div id="showDotExtra">
+                    <label for="dotSize">Dot size:</label>
+                    <output>0.1</output>
+                    <input
+                        type="range"
+                        id="dotSize"
+                        name="dotSize"
+                        min="0.01"
+                        max="0.5"
+                        step="0.01"
+                        value="0.1"
+                        oninput="this.previousElementSibling.value = this.value"
+                    />
+                    <br class="spacing" />
+                </div>
+
+                <hr />
+
+                <button
+                    id="pauseButton"
+                    onclick="togglePause()"
+                    style="margin-top: 0.5em"
+                >
+                    Pause
+                </button>
+                <br />
+
+                <button onclick="reset()">Reset</button>
+                <br />
+            </div>
+        </div>
+    </body>
+</html>
