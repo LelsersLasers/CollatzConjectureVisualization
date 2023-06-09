@@ -35,7 +35,7 @@
             
             <label for="speed">Calculations per second:</label>
             <output>50</output>
-            <input type="range" id="speed" name="speed" min="1" max="100" step="1" value="50" oninput="this.previousElementSibling.value = this.value" />
+            <input type="range" id="speed" name="speed" min="1" max="200" step="1" value="50" oninput="this.previousElementSibling.value = this.value" />
             <br class="spacing" />
 
             <label for="slideSpeed">Animation Time:</label>
@@ -43,8 +43,9 @@
             <input type="range" id="slideSpeed" name="slideSpeed" min="0.1" max="5.0" step="0.1" value="1" oninput="this.previousElementSibling.value = this.value" />
             <br class="spacing" />
 
-            <label for="showAllNumbers">Show all numbers:</label>
-            <input type="checkbox" id="showAllNumbers" name="showAllNumbers" checked />
+            <label for="percentOfNumbers">Percent of numbers to show:</label>
+            <output>1</output>
+            <input type="range" id="percentOfNumbers" name="percentOfNumbers" min="0.05" max="1.0" step="0.05" value="1" oninput="this.previousElementSibling.value = this.value" />
             <br class="spacing" />
 
             <label for="randomColors">Random colors:</label>

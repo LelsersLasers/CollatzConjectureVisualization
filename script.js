@@ -52,6 +52,18 @@ function setupUI() {
             const name = event.target.name;
 
             Settings[name] = value;
+
+            if (name == "percentOfNumbers") {
+                if (allFinishCounts.length > 20) {
+                    const upper = maxFromPercentage(allFinishCounts, Settings.percentOfNumbers);
+                    GraphSize.setX(upper);
+                }
+
+                if (allValues.length > 20) {
+                    const upper = maxFromPercentage(allValues, Settings.percentOfNumbers);
+                    GraphSize.setY(upper);
+                }
+            }
         });
     }
 
@@ -95,14 +107,10 @@ function valToY(val) {
     return canvas.height - (SPACER_PX + ((val - 1) / GraphSize.getY() * height));
 }
 
-function maxNonOutlier(arr) {
+function maxFromPercentage(arr, percent) {
     arr.sort((a, b) => a - b);
-    const q1 = arr[Math.floor(arr.length / 4)];
-    const q3 = arr[Math.floor(arr.length * 3 / 4)];
-    const iqr = q3 - q1;
-    const upperBound = q3 + (iqr * 1.5);
-
-    return upperBound;
+    const index = Math.min(Math.floor(arr.length * percent), arr.length - 1);
+    return arr[index];
 }
 
 
@@ -116,7 +124,7 @@ function render() {
         speedTimer += delta;
         if (speedTimer > 1 / Settings.speed) {
 
-            if (speedTimer > 2 / Settings.speed) {
+            if (speedTimer > 4 / Settings.speed) {
                 // likely from switching tabs or falling too far behind
                 speedTimer = 0;
             } else {
@@ -132,13 +140,8 @@ function render() {
                 allFinishCounts.push(finishCount);
 
                 if (allFinishCounts.length > 20) {
-                    if (Settings.showAllNumbers) {
-                        const upper = Math.max(...allFinishCounts);
-                        GraphSize.setX(upper);
-                    } else {
-                        const upperBound = maxNonOutlier(allFinishCounts);
-                        GraphSize.setX(upperBound);
-                    }
+                    const upper = maxFromPercentage(allFinishCounts, Settings.percentOfNumbers);
+                    GraphSize.setX(upper);
                 }
 
                 const newNumber = lastNumber.start + 1;
@@ -147,13 +150,8 @@ function render() {
             }
 
             if (allValues.length > 20) {
-                if (Settings.showAllNumbers) {
-                    const upper = Math.max(...allValues);
-                    GraphSize.setY(upper);
-                } else {
-                    const upperBound = maxNonOutlier(allValues);
-                    GraphSize.setY(upperBound);
-                }
+                const upper = maxFromPercentage(allValues, Settings.percentOfNumbers);
+                GraphSize.setY(upper);
             }
         }
 
