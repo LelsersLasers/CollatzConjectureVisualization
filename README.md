@@ -1,9 +1,6 @@
 # Collatz Conjecture Visualization
 
-Visualization of the Collatz conjecture in JavaScript
+​Customizable visualization of the Collatz conjecture in JavaScript.
+Running live on the web at: https://lelserslasers.itch.io/collatz-conjecture
 
-## Notes
-
-- If `speed` > fps, `speed` is effectively fps
-- Higher animation speed = faster
-- Performance is limited by the amount of lines needed to be drawn
+![Showcase](./Showcase/Showcase1.PNG)
