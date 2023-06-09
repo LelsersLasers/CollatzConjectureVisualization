@@ -75,6 +75,14 @@ function setupUI() {
             const name = event.target.name;
 
             Settings[name] = value;
+
+            if (name == "showDot") {
+                if (value) {
+                    document.getElementById("dotSize").removeAttribute("hidden");
+                } else {
+                    document.getElementById("dotSize").setAttribute("hidden", "");
+                }
+            }
         });
     }
 }

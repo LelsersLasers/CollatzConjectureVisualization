@@ -61,10 +61,12 @@
             <input type="checkbox" id="showDot" name="showDot" checked />
             <br class="spacing" />
 
-            <label for="dotSize">Dot size:</label>
-            <output>0.2</output>
-            <input type="range" id="dotSize" name="dotSize" min="0.01" max="0.5" step="0.01" value="0.2" oninput="this.previousElementSibling.value = this.value" />
-            <br class="spacing" />
+            <div id="showDotExtra">
+                <label for="dotSize">Dot size:</label>
+                <output>0.2</output>
+                <input type="range" id="dotSize" name="dotSize" min="0.01" max="0.5" step="0.01" value="0.2" oninput="this.previousElementSibling.value = this.value" />
+                <br class="spacing" />
+            </div>
 
             <hr />
 
