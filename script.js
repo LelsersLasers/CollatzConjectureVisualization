@@ -132,7 +132,7 @@ function render() {
         speedTimer += delta;
         if (speedTimer > 1 / Settings.speed) {
 
-            if (speedTimer > 4 / Settings.speed) {
+            if (speedTimer > 2 / Settings.speed) {
                 // likely from switching tabs or falling too far behind
                 speedTimer = 0;
             } else {
@@ -144,22 +144,22 @@ function render() {
                 allValues.push(val);
             }
             else {
-                const finishCount = lastNumber.history.length;
-                allFinishCounts.push(finishCount);
-
-                if (allFinishCounts.length > 20) {
-                    const upper = maxFromPercentage(allFinishCounts, Settings.percentOfNumbers);
-                    GraphSize.setX(upper);
-                }
-
                 const newNumber = lastNumber.start + 1;
                 collatzNumbers.push(new CollatzNumber(newNumber));
                 allValues.push(newNumber);
             }
 
+            const finishCount = lastNumber.history.length;
+            allFinishCounts.push(finishCount);
+
             if (allValues.length > 20) {
                 const upper = maxFromPercentage(allValues, Settings.percentOfNumbers);
                 GraphSize.setY(upper);
+            }
+
+            if (allFinishCounts.length > 20) {
+                const upper = maxFromPercentage(allFinishCounts, Settings.percentOfNumbers);
+                GraphSize.setX(upper);
             }
         }
 
@@ -204,9 +204,12 @@ function render() {
     context.lineWidth = 5;
     context.strokeStyle = "#EBCB8B";
     context.beginPath();
-    context.moveTo(SPACER_PX, SPACER_PX);
+
+    const extraSpacer = Settings.percentOfNumbers == 1 ? SPACER_PX : 0;
+
+    context.moveTo(SPACER_PX, extraSpacer);
     context.lineTo(SPACER_PX, canvas.height - SPACER_PX);
-    context.lineTo(canvas.width - SPACER_PX, canvas.height - SPACER_PX);
+    context.lineTo(canvas.width - extraSpacer, canvas.height - SPACER_PX);
     context.stroke();
 
     // Draw the axis number labels
