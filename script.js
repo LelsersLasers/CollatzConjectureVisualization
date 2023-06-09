@@ -13,9 +13,7 @@ let collatzNumbers = [new CollatzNumber(1)];
 let allValues = [1];
 let allFinishCounts = [];
 
-
 let paused = false;
-
 
 function resize() {
     if (canvas) {
@@ -55,12 +53,18 @@ function setupUI() {
 
             if (name == "percentOfNumbers") {
                 if (allFinishCounts.length > 20) {
-                    const upper = maxFromPercentage(allFinishCounts, Settings.percentOfNumbers);
+                    const upper = maxFromPercentage(
+                        allFinishCounts,
+                        Settings.percentOfNumbers
+                    );
                     GraphSize.setX(upper);
                 }
 
                 if (allValues.length > 20) {
-                    const upper = maxFromPercentage(allValues, Settings.percentOfNumbers);
+                    const upper = maxFromPercentage(
+                        allValues,
+                        Settings.percentOfNumbers
+                    );
                     GraphSize.setY(upper);
                 }
             }
@@ -78,9 +82,13 @@ function setupUI() {
 
             if (name == "showDot") {
                 if (value) {
-                    document.getElementById("dotSize").removeAttribute("hidden");
+                    document
+                        .getElementById("dotSize")
+                        .removeAttribute("hidden");
                 } else {
-                    document.getElementById("dotSize").setAttribute("hidden", "");
+                    document
+                        .getElementById("dotSize")
+                        .setAttribute("hidden", "");
                 }
             }
         });
@@ -102,17 +110,18 @@ function randomColor() {
 
     return rgbToFillStyle(r, g, b);
 }
-  
 
 function valToX(val) {
-    const width = canvas.width - (SPACER_PX * 2);
-    return SPACER_PX + (val / GraphSize.getX() * width);
+    const width = canvas.width - SPACER_PX * 2;
+    return SPACER_PX + (val / GraphSize.getX()) * width;
 }
 function valToY(val) {
     // -1 because the conjecture is that all numbers will eventually reach 1
-    const height = canvas.height - (SPACER_PX * 2);
+    const height = canvas.height - SPACER_PX * 2;
 
-    return canvas.height - (SPACER_PX + ((val - 1) / GraphSize.getY() * height));
+    return (
+        canvas.height - (SPACER_PX + ((val - 1) / GraphSize.getY()) * height)
+    );
 }
 
 function maxFromPercentage(arr, percent) {
@@ -121,17 +130,15 @@ function maxFromPercentage(arr, percent) {
     return arr[index];
 }
 
-
 function render() {
     context.fillStyle = "#3B4252";
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     const lastNumber = collatzNumbers[collatzNumbers.length - 1];
-    
+
     if (!paused) {
         speedTimer += delta;
         if (speedTimer > 1 / Settings.speed) {
-
             if (speedTimer > 2 / Settings.speed) {
                 // likely from switching tabs or falling too far behind
                 speedTimer = 0;
@@ -142,8 +149,7 @@ function render() {
             if (!lastNumber.finished()) {
                 const val = lastNumber.next();
                 allValues.push(val);
-            }
-            else {
+            } else {
                 const newNumber = lastNumber.start + 1;
                 collatzNumbers.push(new CollatzNumber(newNumber));
                 allValues.push(newNumber);
@@ -153,12 +159,18 @@ function render() {
             allFinishCounts.push(finishCount);
 
             if (allValues.length > 20) {
-                const upper = maxFromPercentage(allValues, Settings.percentOfNumbers);
+                const upper = maxFromPercentage(
+                    allValues,
+                    Settings.percentOfNumbers
+                );
                 GraphSize.setY(upper);
             }
 
             if (allFinishCounts.length > 20) {
-                const upper = maxFromPercentage(allFinishCounts, Settings.percentOfNumbers);
+                const upper = maxFromPercentage(
+                    allFinishCounts,
+                    Settings.percentOfNumbers
+                );
                 GraphSize.setX(upper);
             }
         }
@@ -166,14 +178,17 @@ function render() {
         GraphSize.update(delta);
     }
 
-
     context.lineWidth = Settings.lineWidth;
+    context.globalAlpha = Settings.lineOpacity;
+
     for (let i = 0; i < collatzNumbers.length; i++) {
         const collatzNumber = collatzNumbers[i];
         const history = collatzNumber.history;
 
         context.beginPath();
-        context.strokeStyle = Settings.randomColors ? collatzNumber.color : "#ECEFF4";
+        context.strokeStyle = Settings.randomColors
+            ? collatzNumber.color
+            : "#ECEFF4";
         context.moveTo(valToX(0), valToY(history[0]));
         for (let j = 1; j < history.length; j++) {
             const val = history[j];
@@ -182,10 +197,11 @@ function render() {
             const x = valToX(j);
 
             context.lineTo(x, y);
-
         }
         context.stroke();
     }
+
+    context.globalAlpha = 1;
 
     if (Settings.showDot) {
         const lastVal = lastNumber.history[lastNumber.history.length - 1];
@@ -198,9 +214,6 @@ function render() {
         context.fill();
     }
 
-
-
-    
     context.lineWidth = 5;
     context.strokeStyle = "#EBCB8B";
     context.beginPath();
@@ -213,16 +226,20 @@ function render() {
     context.stroke();
 
     // Draw the axis number labels
-    context.font = (SPACER_PX / 4) + "px serif";
+    context.font = SPACER_PX / 3 + "px serif";
     context.fillStyle = "#D8DEE9";
 
     const spacerDif = SPACER_PX * 0.9;
-    
+
     // X axis
     context.textAlign = "right";
     context.textBaseline = "top";
 
-    context.fillText(GraphSize.getX().toFixed(0), canvas.width - SPACER_PX, canvas.height - spacerDif);
+    context.fillText(
+        GraphSize.getX().toFixed(0),
+        canvas.width - SPACER_PX,
+        canvas.height - spacerDif
+    );
 
     // Y axis
     context.textAlign = "right";
@@ -230,19 +247,17 @@ function render() {
 
     context.fillText(GraphSize.getY().toFixed(0), spacerDif, SPACER_PX);
 
-
-
     t1 = performance.now();
     delta = (t1 - t0) / 1000;
     t0 = performance.now();
 
-
-    document.getElementById("fpsText").innerHTML = "FPS: " + Math.round(1 / delta);
-    document.getElementById("numbersText").innerHTML = "Current Number: " + lastNumber.start;
+    document.getElementById("fpsText").innerHTML =
+        "FPS: " + Math.round(1 / delta);
+    document.getElementById("numbersText").innerHTML =
+        "Current Number: " + lastNumber.start;
 
     window.requestAnimationFrame(render);
 }
-
 
 var t0 = performance.now();
 var t1 = performance.now();

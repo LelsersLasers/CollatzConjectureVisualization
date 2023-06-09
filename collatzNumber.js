@@ -11,7 +11,7 @@ class CollatzNumber {
         if (this.number % 2 === 0) {
             this.number = this.number / 2;
         } else {
-            this.number = (this.number * 3) + 1;
+            this.number = this.number * 3 + 1;
         }
         this.history.push(this.number);
         return this.number;

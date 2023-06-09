@@ -6,4 +6,5 @@ class Settings {
     static lineWidth = 1;
     static showDot = true;
     static dotSize = 0.1;
+    static lineOpacity = 1;
 }
