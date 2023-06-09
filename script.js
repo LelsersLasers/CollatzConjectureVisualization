@@ -7,16 +7,6 @@ let speedTimer = 0;
 GraphSize.init();
 
 const canvas = document.getElementsByTagName("canvas")[0];
-// canvas.addEventListener("mousemove", function (event) {
-//     const rect = canvas.getBoundingClientRect();
-
-//     const x = event.clientX - rect.left;
-//     const y = event.clientY - rect.top;
-
-//     // const pos = new Vector(x / canvas.width, y / canvas.height);
-//     // mouseObstacle.pos = pos;
-// });
-
 const context = canvas.getContext("2d");
 
 let collatzNumbers = [new CollatzNumber(1)];
@@ -32,9 +22,6 @@ function resize() {
         let maxWidth = (window.innerWidth - 34) * (3 / 4);
         let maxHeight = window.innerHeight - 34;
 
-        // let width = Math.min(maxWidth, maxHeight);
-        // let height = Math.min(maxHeight, maxWidth);
-
         canvas.width = maxWidth;
         canvas.height = maxHeight;
 
@@ -46,6 +33,38 @@ function togglePause() {
     paused = !paused;
     let text = paused ? "Resume" : "Pause";
     document.getElementById("pauseButton").innerHTML = text;
+}
+function reset() {
+    collatzNumbers = [new CollatzNumber(1)];
+    allValues = [1];
+    allFinishCounts = [];
+
+    GraphSize.setX(SLIDE_START);
+    GraphSize.setY(SLIDE_START);
+}
+
+function setupUI() {
+    const rangeElements = document.querySelectorAll("input[type=range]");
+    for (let i = 0; i < rangeElements.length; i++) {
+        const element = rangeElements[i];
+        element.addEventListener("input", function (event) {
+            let value = parseFloat(event.target.value);
+            const name = event.target.name;
+
+            Settings[name] = value;
+        });
+    }
+
+    const checkboxElements = document.querySelectorAll("input[type=checkbox]");
+    for (let i = 0; i < checkboxElements.length; i++) {
+        const element = checkboxElements[i];
+        element.addEventListener("change", function (event) {
+            const value = event.target.checked;
+            const name = event.target.name;
+
+            Settings[name] = value;
+        });
+    }
 }
 
 function rgbToFillStyle(r, g, b) {
@@ -91,6 +110,7 @@ function render() {
     context.fillStyle = "#3B4252";
     context.fillRect(0, 0, canvas.width, canvas.height);
 
+    const lastNumber = collatzNumbers[collatzNumbers.length - 1];
     
     if (!paused) {
         speedTimer += delta;
@@ -103,7 +123,6 @@ function render() {
                 speedTimer -= 1 / Settings.speed;
             }
 
-            const lastNumber = collatzNumbers[collatzNumbers.length - 1];
             if (!lastNumber.finished()) {
                 const val = lastNumber.next();
                 allValues.push(val);
@@ -137,9 +156,10 @@ function render() {
                 }
             }
         }
+
+        GraphSize.update(delta);
     }
 
-    GraphSize.update(delta);
 
     for (let i = 0; i < collatzNumbers.length; i++) {
         const collatzNumber = collatzNumbers[i];
@@ -194,7 +214,8 @@ function render() {
     t0 = performance.now();
 
 
-    // document.getElementById("fpsText").innerHTML = "FPS: " + Math.round(1 / delta);
+    document.getElementById("fpsText").innerHTML = "FPS: " + Math.round(1 / delta);
+    document.getElementById("numbersText").innerHTML = "Numbers: " + lastNumber.start;
 
     window.requestAnimationFrame(render);
 }
@@ -204,5 +225,6 @@ var t0 = performance.now();
 var t1 = performance.now();
 var delta = 1 / 60;
 
+setupUI();
 
 window.requestAnimationFrame(render);

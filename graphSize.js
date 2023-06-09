@@ -20,9 +20,9 @@ class GraphSize {
     }
 
     static setX(x) {
-        this.slideEffectX = new SlideEffect(this.slideEffectX.current, x, this.slideEffectX.speed);
+        this.slideEffectX = new SlideEffect(this.slideEffectX.current, x);
     }
     static setY(y) {
-        this.slideEffectY = new SlideEffect(this.slideEffectY.current, y, this.slideEffectY.speed);
+        this.slideEffectY = new SlideEffect(this.slideEffectY.current, y);
     }
 }
