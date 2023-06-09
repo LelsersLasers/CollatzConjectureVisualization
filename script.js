@@ -238,7 +238,7 @@ function render() {
 
 
     document.getElementById("fpsText").innerHTML = "FPS: " + Math.round(1 / delta);
-    document.getElementById("numbersText").innerHTML = "Numbers: " + lastNumber.start;
+    document.getElementById("numbersText").innerHTML = "Current Number: " + lastNumber.start;
 
     window.requestAnimationFrame(render);
 }

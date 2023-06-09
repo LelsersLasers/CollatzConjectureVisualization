@@ -5,5 +5,5 @@ class Settings {
     static slideSpeed = 1; // higher = slower
     static lineWidth = 1;
     static showDot = true;
-    static dotSize = 0.2;
+    static dotSize = 0.1;
 }
