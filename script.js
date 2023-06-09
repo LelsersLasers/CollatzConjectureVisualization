@@ -159,6 +159,7 @@ function render() {
     }
 
 
+    context.lineWidth = Settings.lineWidth;
     for (let i = 0; i < collatzNumbers.length; i++) {
         const collatzNumber = collatzNumbers[i];
         const history = collatzNumber.history;
@@ -180,6 +181,8 @@ function render() {
 
 
 
+    
+    context.lineWidth = 5;
     context.strokeStyle = "#EBCB8B";
     context.beginPath();
     context.moveTo(SPACER_PX, SPACER_PX);
