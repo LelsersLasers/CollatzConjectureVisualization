@@ -213,7 +213,7 @@ function render() {
     context.stroke();
 
     // Draw the axis number labels
-    context.font = (SPACER_PX / 3) + "px serif";
+    context.font = (SPACER_PX / 2.5) + "px serif";
     context.fillStyle = "#D8DEE9";
 
     const spacerDif = SPACER_PX * 0.9;
