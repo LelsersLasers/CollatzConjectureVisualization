@@ -179,6 +179,17 @@ function render() {
         context.stroke();
     }
 
+    if (Settings.showDot) {
+        const lastVal = lastNumber.history[lastNumber.history.length - 1];
+        const lastX = valToX(lastNumber.history.length - 1);
+        const lastY = valToY(lastVal);
+
+        context.fillStyle = "#A3BE8C";
+        context.beginPath();
+        context.arc(lastX, lastY, Settings.dotSize * SPACER_PX, 0, 2 * Math.PI);
+        context.fill();
+    }
+
 
 
     
