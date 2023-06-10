@@ -15,7 +15,4 @@ class SlideEffect {
             this.current = this.end;
         }
     }
-    // finished() {
-    //     return this.current == this.end;
-    // }
 }

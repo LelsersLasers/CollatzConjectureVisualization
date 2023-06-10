@@ -1,28 +1,31 @@
 class GraphSize {
-    static slideEffectX;
-    static slideEffectY;
+
+    static slideMinX;
+    static slideMaxX;
+    static slideMinY;
+    static slideMaxY;
 
     static init() {
-        this.slideEffectX = new SlideEffect(SLIDE_START, SLIDE_START);
-        this.slideEffectY = new SlideEffect(SLIDE_START, SLIDE_START);
+        this.slideMinX = new SlideEffect(0, 0);
+        this.slideMaxX = new SlideEffect(1, 1);
+        this.slideMinY = new SlideEffect(0, 0);
+        this.slideMaxY = new SlideEffect(1, 1);
     }
 
     static update(delta) {
-        this.slideEffectX.update(delta);
-        this.slideEffectY.update(delta);
+        this.slideMinX.update(delta);
+        this.slideMaxX.update(delta);
+        this.slideMinY.update(delta);
+        this.slideMaxY.update(delta);
     }
 
-    static getX() {
-        return this.slideEffectX.current;
-    }
-    static getY() {
-        return this.slideEffectY.current;
-    }
+    static getMinX = () => this.slideMinX.current;
+    static getMaxX = () => this.slideMaxX.current;
+    static getMinY = () => this.slideMinY.current;
+    static getMaxY = () => this.slideMaxY.current;
 
-    static setX(x) {
-        this.slideEffectX = new SlideEffect(this.slideEffectX.current, x);
-    }
-    static setY(y) {
-        this.slideEffectY = new SlideEffect(this.slideEffectY.current, y);
-    }
+    static setMinX = (value) => this.slideMinX = new SlideEffect(this.slideMinX.current, value);
+    static setMaxX = (value) => this.slideMaxX = new SlideEffect(this.slideMaxX.current, value);
+    static setMinY = (value) => this.slideMinY = new SlideEffect(this.slideMinY.current, value);
+    static setMaxY = (value) => this.slideMaxY = new SlideEffect(this.slideMaxY.current, value);
 }
