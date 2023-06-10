@@ -47,7 +47,7 @@ function setupUI() {
             if (name == "angle") {
                 value *= Math.PI / 180;
             }
-            
+
             Settings[name] = value;
         });
     }
@@ -197,7 +197,6 @@ function render() {
     GraphSize.setMinY(lowestY);
     GraphSize.setMaxY(highestY);
 
-
     for (let i = 0; i < points.length; i++) {
         const chain = points[i];
 
@@ -221,7 +220,6 @@ function render() {
         }
         context.stroke();
     }
-            
 
     context.globalAlpha = 1;
 
