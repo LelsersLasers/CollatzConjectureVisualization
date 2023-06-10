@@ -37,57 +37,43 @@ function reset() {
 }
 
 function setupUI() {
-    // const rangeElements = document.querySelectorAll("input[type=range]");
-    // for (let i = 0; i < rangeElements.length; i++) {
-    //     const element = rangeElements[i];
-    //     element.addEventListener("input", function (event) {
-    //         let value = parseFloat(event.target.value);
-    //         const name = event.target.name;
+    const rangeElements = document.querySelectorAll("input[type=range]");
+    for (let i = 0; i < rangeElements.length; i++) {
+        const element = rangeElements[i];
+        element.addEventListener("input", function (event) {
+            let value = parseFloat(event.target.value);
+            const name = event.target.name;
 
-    //         Settings[name] = value;
+            if (name == "angle") {
+                value *= Math.PI / 180;
+            }
+            
+            Settings[name] = value;
+        });
+    }
 
-    //         if (name == "percentOfNumbers") {
-    //             if (allFinishCounts.length > 20) {
-    //                 const upper = maxFromPercentage(
-    //                     allFinishCounts,
-    //                     Settings.percentOfNumbers
-    //                 );
-    //                 GraphSize.setX(upper);
-    //             }
+    const checkboxElements = document.querySelectorAll("input[type=checkbox]");
+    for (let i = 0; i < checkboxElements.length; i++) {
+        const element = checkboxElements[i];
+        element.addEventListener("change", function (event) {
+            const value = event.target.checked;
+            const name = event.target.name;
 
-    //             if (allValues.length > 20) {
-    //                 const upper = maxFromPercentage(
-    //                     allValues,
-    //                     Settings.percentOfNumbers
-    //                 );
-    //                 GraphSize.setY(upper);
-    //             }
-    //         }
-    //     });
-    // }
+            Settings[name] = value;
 
-    // const checkboxElements = document.querySelectorAll("input[type=checkbox]");
-    // for (let i = 0; i < checkboxElements.length; i++) {
-    //     const element = checkboxElements[i];
-    //     element.addEventListener("change", function (event) {
-    //         const value = event.target.checked;
-    //         const name = event.target.name;
-
-    //         Settings[name] = value;
-
-    //         if (name == "showDot") {
-    //             if (value) {
-    //                 document
-    //                     .getElementById("dotSize")
-    //                     .removeAttribute("hidden");
-    //             } else {
-    //                 document
-    //                     .getElementById("dotSize")
-    //                     .setAttribute("hidden", "");
-    //             }
-    //         }
-    //     });
-    // }
+            if (name == "showDot") {
+                if (value) {
+                    document
+                        .getElementById("dotSize")
+                        .removeAttribute("hidden");
+                } else {
+                    document
+                        .getElementById("dotSize")
+                        .setAttribute("hidden", "");
+                }
+            }
+        });
+    }
 }
 
 function rgbToFillStyle(r, g, b) {
@@ -265,6 +251,6 @@ var t0 = performance.now();
 var t1 = performance.now();
 var delta = 1 / 60;
 
-// setupUI();
+setupUI();
 
 window.requestAnimationFrame(render);
